@@ -53,5 +53,5 @@ class Model private constructor() {
                 callback(user)
             }
         }
-    }*/
+    }
 }
