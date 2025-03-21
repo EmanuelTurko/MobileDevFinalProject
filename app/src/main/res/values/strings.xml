@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">RecipeHub</string>
+    <string name="blank_avatar" />
+    <string name="register">Register</string>
+    <string name="yes_account">Already have an account?</string>
+    <string name="login_ref"><u>Login</u></string>
+    <string name="Password">Password</string>
+    <string name="Email">Email</string>
+    <string name="Username">Username</string>
+    <string name="enter_username_email">Enter Username/Email</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="login">Login</string>
+    <string name="no_account">Don\'t have an account yet?</string>
+    <string name="register_ref"><u>Register</u></string>
+    <string name="registerFragment">Register</string>
+    <string name="loginFragment">Login</string>
+</resources>
