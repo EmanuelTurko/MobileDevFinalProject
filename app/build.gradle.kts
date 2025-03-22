@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.auth.ktx)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -74,4 +75,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore.v2513)
+    implementation(libs.jbcrypt)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.core)
 }

@@ -4,10 +4,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.recipehub.base.MyApplication
-import com.example.recipehub.model.AppUser
+import com.example.recipehub.model.User
 
 
-@Database(entities = [AppUser::class], version = 1)
+@Database(entities = [User::class], version = 2)
 abstract class AppLocalDbRepository: RoomDatabase() {
 
     abstract fun userDao(): UserDao

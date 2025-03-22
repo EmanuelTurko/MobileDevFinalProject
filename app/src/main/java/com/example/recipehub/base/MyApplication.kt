@@ -2,6 +2,7 @@ package com.example.recipehub.base
 
 import android.app.Application
 import android.content.Context
+import com.google.firebase.FirebaseApp
 
 class MyApplication: Application() {
 
@@ -13,5 +14,6 @@ class MyApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        FirebaseApp.initializeApp(context)
     }
 }

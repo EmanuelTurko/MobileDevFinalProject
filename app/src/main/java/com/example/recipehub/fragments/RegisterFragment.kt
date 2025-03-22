@@ -11,7 +11,7 @@ import com.example.recipehub.databinding.FragmentRegisterBinding
 import androidx.navigation.fragment.findNavController
 import com.example.recipehub.R
 import com.example.recipehub.model.Model
-import com.example.recipehub.model.AppUser
+import com.example.recipehub.model.User
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
 import androidx.media3.common.util.Log
@@ -49,33 +49,35 @@ class RegisterFragment: Fragment() {
     }
 
     @OptIn(UnstableApi::class)
-    fun onRegister(view: View){
+    fun onRegister(view: View) {
         val username = binding?.usernameEditText?.text.toString()
         val email = binding?.emailEditText?.text.toString()
         val password = binding?.passwordEditText?.text.toString()
 
-        if(username.isEmpty()  || username.length<4){
+        if (username.isEmpty() || username.length < 4) {
             binding?.usernameEditText?.error = "Username must be at least 4 characters"
             return
         }
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             binding?.emailEditText?.error = "Email is required"
             return
         }
         val emailPattern = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
-        if((!email.contains("@") || !email.contains("."))&& !email.matches(emailPattern) ){
+        if ((!email.contains("@") || !email.contains(".")) && !email.matches(emailPattern)) {
             binding?.emailEditText?.error = "Valid email is required"
             return
         }
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             binding?.passwordEditText?.error = "Password is required"
             return
         }
-        if(password.length<6 || !password.contains(Regex(".*[A-Z].*"))){
-            binding?.passwordEditText?.error = "Password must be at least 6 characters and contain at least one capital letter"
+        if (password.length < 6 || !password.contains(Regex(".*[A-Z].*"))) {
+            binding?.passwordEditText?.error =
+                "Password must be at least 6 characters and contain at least one capital letter"
             return
         }
-        val user = AppUser(
+        val user = User(
+            id = "",
             username = username,
             email = email,
             password = password,
@@ -83,11 +85,18 @@ class RegisterFragment: Fragment() {
             recipes = "",
             comments = ""
         )
-        Model.shared.addUser(user) {
+        Model.shared.addUser(user, {
             Log.d("Firebase", "User added")
-        }
-
-
+            // Handle success
+        }, { error: String ->
+            if (error.contains("Username already exists")) {
+                binding?.usernameEditText?.error = "Username already exists"
+            } else if (error.contains("Email already exists")) {
+                binding?.emailEditText?.error = "Email already exists"
+            } else {
+                Log.e("Firebase", "Error adding user: $error")
+            }
+        })
     }
     private fun processAvatar() {
         pickImageLauncher.launch("image/*")
