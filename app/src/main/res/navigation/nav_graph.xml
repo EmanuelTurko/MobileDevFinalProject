@@ -1,14 +1,28 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.recipehub.fragments.HomeFragment"
+        android:label="@string/homeFragment" />
+    <action
+        android:id="@+id/action_to_register"
+        app:destination="@id/registerFragment" />
+    <action
+        android:id="@+id/action_to_login"
+        app:destination="@id/loginFragment" />
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.recipehub.fragments.LoginFragment"
         android:label="@string/loginFragment">
         <action
-            android:id="@+id/action_login_to_register"
+            android:id="@+id/action_to_register"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/homeFragment" />
     </fragment>
 
     <fragment
@@ -16,8 +30,11 @@
         android:name="com.example.recipehub.fragments.RegisterFragment"
         android:label="@string/registerFragment">
         <action
-            android:id="@+id/action_register_to_login"
+            android:id="@+id/action_to_login"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/homeFragment" />
     </fragment>
 
 </navigation>

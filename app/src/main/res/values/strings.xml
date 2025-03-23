@@ -14,4 +14,11 @@
     <string name="register_ref"><u>Register</u></string>
     <string name="registerFragment">Register</string>
     <string name="loginFragment">Login</string>
+    <string name="login_bottom_nav_menu" />
+    <string name="register_bottom_nav_menu" />
+    <string name="profile_bottom_nav_menu" />
+    <string name="create_bottom_nav_menu" />
+    <string name="my_recipes_bottom_nav_menu" />
+    <string name="home_bottom_nav_menu" />
+    <string name="homeFragment">Home</string>
 </resources>

@@ -29,6 +29,7 @@ class Model private constructor() {
         executor.execute{
             database.userDao().insertUser(user)
             mainHandler.post {
+                Log.e("Firebase", "User added to local database")
                 callback()
             }
         }

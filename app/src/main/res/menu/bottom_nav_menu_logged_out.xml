@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home_bottom_nav_menu"
+        android:title="@string/home_bottom_nav_menu" />
+    <item
+        android:id="@+id/myRecipes"
+        android:icon="@drawable/ic_home_bottom_nav_menu"
+        android:title="@string/my_recipes_bottom_nav_menu" />
+
+    <item
+        android:id="@+id/create"
+        android:icon="@drawable/ic_create_bottom_nav_menu"
+        android:title="@string/create_bottom_nav_menu" />
+
+    <item
+        android:id="@+id/login"
+        android:icon="@drawable/ic_login_bottom_nav_menu"
+        android:title="@string/login_bottom_nav_menu" />
+    <item
+        android:id="@+id/register"
+        android:icon="@drawable/ic_register_bottom_nav_menu"
+        android:title="@string/register_bottom_nav_menu" />
+
+
+</menu>

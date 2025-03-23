@@ -28,17 +28,15 @@ class RegisterFragment: Fragment() {
         savedInstanceState: Bundle?
         ) : View? {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        binding?.refLoginTextView?.setOnClickListener {
-            findNavController().navigate(R.id.action_register_to_login)
+        binding?.refLoginTextView?.setOnClickListener{
+            findNavController().navigate(R.id.action_to_login)
         }
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri:Uri? ->
             avatarUri = uri?.toString()
             binding?.avatarImageView?.setImageURI(uri)
         }
-        binding?.registerBtn?.setOnClickListener(::onRegister)
-        binding?.avatarImageView?.setOnClickListener{
-            processAvatar()
-        }
+        binding?.registerBtn?.setOnClickListener{ onRegister() }
+        binding?.avatarImageView?.setOnClickListener{ processAvatar() }
 
         return binding?.root
     }
@@ -49,7 +47,7 @@ class RegisterFragment: Fragment() {
     }
 
     @OptIn(UnstableApi::class)
-    fun onRegister(view: View) {
+    private fun onRegister() {
         val username = binding?.usernameEditText?.text.toString()
         val email = binding?.emailEditText?.text.toString()
         val password = binding?.passwordEditText?.text.toString()
@@ -85,10 +83,12 @@ class RegisterFragment: Fragment() {
             recipes = "",
             comments = ""
         )
+        binding?.registerBtn?.isEnabled = false
         Model.shared.addUser(user, {
             Log.d("Firebase", "User added")
-            // Handle success
+            findNavController().navigate(R.id.action_to_login)
         }, { error: String ->
+            binding?.registerBtn?.isEnabled = true
             if (error.contains("Username already exists")) {
                 binding?.usernameEditText?.error = "Username already exists"
             } else if (error.contains("Email already exists")) {
