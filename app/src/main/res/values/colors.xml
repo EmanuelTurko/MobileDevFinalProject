@@ -11,4 +11,7 @@
     <color name="colorUnselected">#8A8A8A</color>
     <color name="colorSelectedText">#FF0000</color>
     <color name="colorUnselectedText">#8A8A8A</color>
+    <color name="gray">#FF808080</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="defaultBG">#222222</color>
 </resources>

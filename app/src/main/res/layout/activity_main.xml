@@ -7,7 +7,6 @@
     tools:context=".MainActivity"
     android:fitsSystemWindows="false">
 
-    <!-- Fragment container to hold fragments -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_nav_host"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -22,13 +21,13 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
+        style="@style/BottomNavStyle"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="0dp"
+        android:layout_height="75dp"
         android:paddingBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu_logged_out"
-        style="@style/BottomNavStyle" />
+        app:menu="@menu/bottom_nav_menu_logged_out" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

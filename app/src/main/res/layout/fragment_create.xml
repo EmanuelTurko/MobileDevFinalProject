@@ -1,0 +1,78 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="20dp"
+        android:elevation="16dp"
+        android:background="#222222">
+
+        <!-- Recipe Title -->
+        <EditText
+            android:id="@+id/title_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Recipe Title"
+            android:padding="12dp"
+            android:textSize="18sp"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@android:color/white"
+            android:background="#333333"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Difficulty Rating (Stars) -->
+        <RatingBar
+            android:id="@+id/difficulty_ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
+            android:layout_marginBottom="16dp"
+            android:background="#222222"
+            android:numStars="5"
+            android:stepSize="1.0" />
+
+        <!-- Recipe Image URL (with bigger box) -->
+        <ImageView
+            android:id="@+id/imageUrl_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:hint="Click to Upload Image"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@android:color/white"
+            android:background="#333333"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Recipe Description -->
+        <EditText
+            android:id="@+id/description_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:gravity="top"
+            android:lines="5"
+            android:inputType="textMultiLine"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@android:color/white"
+            android:background="#333333"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/post_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#333333" />
+    </LinearLayout>
+
+</ScrollView>

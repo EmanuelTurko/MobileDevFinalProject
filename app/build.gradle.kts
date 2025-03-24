@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.storage.ktx)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -78,4 +79,10 @@ dependencies {
     implementation(libs.jbcrypt)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.core)
+    implementation(libs.picasso)
+    implementation(libs.material)
+    implementation(libs.ui)
+    implementation(libs.androidx.material)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.androidx.navigation.compose)
 }

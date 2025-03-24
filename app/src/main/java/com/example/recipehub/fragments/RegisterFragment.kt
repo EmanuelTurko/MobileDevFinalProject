@@ -4,22 +4,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import com.example.recipehub.databinding.FragmentRegisterBinding
 import androidx.navigation.fragment.findNavController
 import com.example.recipehub.R
-import com.example.recipehub.model.Model
+import com.example.recipehub.model.UserModel
 import com.example.recipehub.model.User
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
+import androidx.compose.runtime.getValue
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
+import androidx.navigation.findNavController
+import androidx.core.net.toUri
+import com.example.recipehub.utils.saveBitmapToFile
+import com.example.recipehub.utils.uriToBitmap
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.example.recipehub.utils.SimulateLoading
+import androidx.compose.runtime.LaunchedEffect
 
 class RegisterFragment: Fragment() {
     private var binding : FragmentRegisterBinding? = null
-    private var avatarUri: String? = null
+    private lateinit var avatarUri: String
+    private val _binding get() = binding!!
 
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
@@ -31,12 +42,22 @@ class RegisterFragment: Fragment() {
         binding?.refLoginTextView?.setOnClickListener{
             findNavController().navigate(R.id.action_to_login)
         }
-        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri:Uri? ->
-            avatarUri = uri?.toString()
-            binding?.avatarImageView?.setImageURI(uri)
+        avatarUri = blankAvatar()
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { selectedUri ->
+                val bitmap = uriToBitmap(selectedUri, requireContext())
+                bitmap?.let {
+                    val fileUri = saveBitmapToFile(it, requireContext())
+                    fileUri?.let { uri ->
+                        avatarUri = uri.toString()
+                        binding?.avatarImageView?.setImageURI(uri)
+                    }
+                }
+            }
         }
+        binding?.avatarImageView?.setOnClickListener{ pickImageLauncher.launch("image/*") }
         binding?.registerBtn?.setOnClickListener{ onRegister() }
-        binding?.avatarImageView?.setOnClickListener{ processAvatar() }
+
 
         return binding?.root
     }
@@ -74,32 +95,52 @@ class RegisterFragment: Fragment() {
                 "Password must be at least 6 characters and contain at least one capital letter"
             return
         }
+        binding?.composeView?.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                var isLoading by remember { mutableStateOf(true) }
+                SimulateLoading(
+                    onLoadingComplete = { isLoading = false }
+                )
+                LaunchedEffect(isLoading) {
+                    if (!isLoading) {
+                        findNavController().navigate(R.id.action_to_login)
+                    }
+                }
+            }
+        }
         val user = User(
-            id = "",
             username = username,
             email = email,
             password = password,
-            avatarUrl = avatarUri ?: "",
-            recipes = "",
-            comments = ""
+            avatarUrl = avatarUri,
         )
         binding?.registerBtn?.isEnabled = false
-        Model.shared.addUser(user, {
-            Log.d("Firebase", "User added")
-            findNavController().navigate(R.id.action_to_login)
-        }, { error: String ->
+        UserModel.shared.addUser(user, {
+            Log.d("Register", "User added")
+        }, { error ->
             binding?.registerBtn?.isEnabled = true
-            if (error.contains("Username already exists")) {
+            if (error.message?.contains("Username", true) == true) {
                 binding?.usernameEditText?.error = "Username already exists"
-            } else if (error.contains("Email already exists")) {
+            } else if (error.message?.contains("email", true) == true) {
                 binding?.emailEditText?.error = "Email already exists"
             } else {
-                Log.e("Firebase", "Error adding user: $error")
+                Log.e("Register", "Error adding user: $error")
             }
+            binding?.composeView?.visibility = View.GONE
         })
+
     }
-    private fun processAvatar() {
-        pickImageLauncher.launch("image/*")
+    private fun blankAvatar(): String {
+        val blankAvatar = "android.resource://com.example.recipehub/drawable/blank_avatar"
+        val bitmap = uriToBitmap(blankAvatar.toUri(), requireContext())
+        bitmap?.let {
+            val fileUri = saveBitmapToFile(it, requireContext())
+            fileUri?.let { uri ->
+                return uri.toString()
+            }
+        }
+        return ""
     }
 
 

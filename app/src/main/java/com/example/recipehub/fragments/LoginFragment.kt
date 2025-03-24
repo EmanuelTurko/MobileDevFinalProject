@@ -1,7 +1,5 @@
 package com.example.recipehub.fragments
 
-import android.content.Context.MODE_PRIVATE
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,11 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.recipehub.MainActivity
 import com.example.recipehub.R
 import com.example.recipehub.databinding.FragmentLoginBinding
-import com.example.recipehub.model.Model
-import androidx.core.content.edit
+import com.example.recipehub.model.UserModel
 
 class LoginFragment : Fragment() {
 
@@ -28,7 +24,7 @@ class LoginFragment : Fragment() {
         binding?.refRegisterTextView?.setOnClickListener {
             findNavController().navigate(R.id.action_to_register)
         }
-        binding?.loginBtn?.setOnClickListener(::onLogin)
+        binding?.loginBtn?.setOnClickListener{ onLogin() }
 
         return binding?.root
     }
@@ -37,7 +33,7 @@ class LoginFragment : Fragment() {
         binding = null
     }
 
-    fun onLogin(view: View) {
+    private fun onLogin() {
         val email = binding?.emailEditText?.text.toString()
         val password = binding?.passwordEditText?.text.toString()
 
@@ -50,27 +46,18 @@ class LoginFragment : Fragment() {
             return
         }
         binding?.loginBtn?.isEnabled = false
-        Model.shared.login(email, password, {
-            Log.e("Firebase", "Login successful")
-            onSuccessfulLogin()
+        UserModel.shared.login(email, password, {
+            Log.d("Login", "Login successful")
+            UserModel.shared.setLoginState(true)
+            findNavController().navigate(R.id.action_to_home)
         }, { error ->
-            binding?.loginBtn?.isEnabled = true
-            if (error.isNotEmpty()) {
-                Log.e("Firebase", error)
-                if (error.contains("Invalid")){
-                    binding?.emailEditText?.error = error
-                    binding?.passwordEditText?.error = error
+                binding?.loginBtn?.isEnabled = true
+                if (error.message?.contains("incorrect",true) == true){
+                    binding?.emailEditText?.error = "Invalid credentials"
+                    binding?.passwordEditText?.error =  "Invalid credentials"
                 }
             }
-        })
+        )
     }
-    private fun onSuccessfulLogin() {
-        val sharedPref = requireActivity().getSharedPreferences("RecipeHub", MODE_PRIVATE)
-        sharedPref.edit() {
-            putBoolean("isLoggedIn", true)
-        }
-        Log.e("Firebase", "User is logged in")
-        findNavController().popBackStack(R.id.homeFragment, false)
-        Log.e("Firebase", "Navigated to home fragment")
-    }
+
 }

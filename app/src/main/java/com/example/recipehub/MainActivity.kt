@@ -2,8 +2,14 @@ package com.example.recipehub
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +18,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.recipehub.databinding.ActivityMainBinding
 import com.example.recipehub.utils.hideSystemUI
 import androidx.core.content.edit
+import setupUI
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,9 +31,10 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+        setupUI(findViewById(android.R.id.content))
         hideSystemUI()
 
-        sharedPref = getSharedPreferences("RecipeHub", MODE_PRIVATE)
+        sharedPref = getSharedPreferences("userInfo", MODE_PRIVATE)
         listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == "isLoggedIn") {
                 refreshBottomNav()
@@ -54,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                     if(currentDestinationId != R.id.registerFragment) {
                         navController.navigate(R.id.action_to_register)
                         Log.e("MainActivity", "Register clicked")
+                        Log.e("MainActivity", "shared pref: ${ sharedPref.all }")
                     }
                     true
                 }
@@ -68,11 +77,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.create -> {
-                    /*if(currentDestinationId != R.id.createRecipeFragment) {
-                        navController.navigate(R.id.action_to_createRecipe)
-                        Log.e("MainActivity", "Create Recipe clicked")
+                    if(currentDestinationId != R.id.createFragment && isLoggedIn()) {
+                        navController.navigate(R.id.action_to_create)
+                        Log.e("MainActivity", "Create clicked")
                     }
-                    */
                     true
                 }
 
@@ -85,18 +93,23 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.profile -> {
-                    /*if(currentDestinationId != R.id.profileFragment) {
+                    if(currentDestinationId != R.id.profileFragment) {
                         navController.navigate(R.id.action_to_profile)
                         Log.e("MainActivity", "Profile clicked")
                     }
-                   */
                     true
                 }
 
                 R.id.logout -> {
-                    sharedPref.edit() { clear() }
-                    //spinner
-                    refreshBottomNav()
+                    onLogout()
+                    if(currentDestinationId != R.id.homeFragment) {
+                        navController.navigate(R.id.action_to_home)
+                        Log.e("MainActivity", "Logout clicked going to home")
+                    }
+                    else{
+                        navController.navigate(R.id.action_to_login)
+                        Log.e("MainActivity", "Logout clicked going to login")
+                    }
                     true
                 }
 
@@ -121,4 +134,14 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         sharedPref.unregisterOnSharedPreferenceChangeListener(listener)
     }
+    private fun onLogout() {
+        sharedPref.edit(){
+            putBoolean("isLoggedIn", false)
+            remove("avatarByteArray")
+            apply()
+        }
+        refreshBottomNav()
+
+    }
+
 }

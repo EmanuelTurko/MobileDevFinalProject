@@ -17,8 +17,16 @@
     <string name="login_bottom_nav_menu" />
     <string name="register_bottom_nav_menu" />
     <string name="profile_bottom_nav_menu" />
+    <string name="logout_bottom_nav_menu" />
     <string name="create_bottom_nav_menu" />
     <string name="my_recipes_bottom_nav_menu" />
     <string name="home_bottom_nav_menu" />
     <string name="homeFragment">Home</string>
+    <string name="profileFragment">Profile</string>
+    <string name="reset">Reset</string>
+    <string name="submit">Submit</string>
+    <string name="profile_textView">Comments: %1$d | Recipes: %2$d</string>
+    <string name="bootFragment">boot</string>
+    <string name="home">home</string>
+    <string name="createFragment" />
 </resources>
