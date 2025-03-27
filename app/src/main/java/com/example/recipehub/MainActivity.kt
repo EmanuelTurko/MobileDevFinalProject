@@ -1,23 +1,15 @@
 package com.example.recipehub
 
-import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Rect
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation
+import androidx.core.content.edit
 import androidx.navigation.fragment.NavHostFragment
 import com.example.recipehub.databinding.ActivityMainBinding
 import com.example.recipehub.utils.hideSystemUI
-import androidx.core.content.edit
 import setupUI
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_nav_host) as? NavHostFragment
+        val navController = navHostFragment?.navController
         setContentView(binding?.root)
         setupUI(findViewById(android.R.id.content))
         hideSystemUI()
@@ -43,16 +37,13 @@ class MainActivity : AppCompatActivity() {
         sharedPref.registerOnSharedPreferenceChangeListener(listener)
         refreshBottomNav()
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.main_nav_host) as NavHostFragment
-        val navController = navHostFragment.navController
 
         binding?.bottomNav?.setOnItemSelectedListener { item ->
-            val currentDestinationId = navController.currentDestination?.id
+            val currentDestinationId = navController?.currentDestination?.id
             when (item.itemId) {
                 R.id.login -> {
                     if(currentDestinationId != R.id.loginFragment) {
-                        navController.navigate(R.id.action_to_login)
+                        navController?.navigate(R.id.action_to_login)
                         Log.e("MainActivity", "Login clicked")
                     }
                     true
@@ -60,41 +51,39 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.register -> {
                     if(currentDestinationId != R.id.registerFragment) {
-                        navController.navigate(R.id.action_to_register)
+                        navController?.navigate(R.id.action_to_register)
                         Log.e("MainActivity", "Register clicked")
-                        Log.e("MainActivity", "shared pref: ${ sharedPref.all }")
                     }
                     true
                 }
 
                 R.id.myRecipes -> {
-                    /*if(currentDestinationId != R.id.myRecipesFragment) {
-                        navController.navigate(R.id.action_to_myRecipes)
+                    if(isLoggedIn() && currentDestinationId != R.id.myRecipesFragment) {
+                        navController?.navigate(R.id.action_to_myRecipes)
                         Log.e("MainActivity", "My Recipes clicked")
                     }
-                    */
                     true
                 }
 
                 R.id.create -> {
-                    if(currentDestinationId != R.id.createFragment && isLoggedIn()) {
-                        navController.navigate(R.id.action_to_create)
-                        Log.e("MainActivity", "Create clicked")
+                    if(isLoggedIn() && currentDestinationId != R.id.action_to_create) {
+                                navController?.navigate(R.id.action_to_create)
+                                Log.e("MainActivity", "Create clicked?")
                     }
                     true
                 }
 
                 R.id.home -> {
                     if(currentDestinationId != R.id.homeFragment) {
-                        navController.navigate(R.id.action_to_home)
+                        navController?.navigate(R.id.action_to_home)
                         Log.e("MainActivity", "Home clicked")
                     }
                     true
                 }
 
                 R.id.profile -> {
-                    if(currentDestinationId != R.id.profileFragment) {
-                        navController.navigate(R.id.action_to_profile)
+                    if(isLoggedIn() && currentDestinationId != R.id.profileFragment) {
+                        navController?.navigate(R.id.action_to_profile)
                         Log.e("MainActivity", "Profile clicked")
                     }
                     true
@@ -103,13 +92,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.logout -> {
                     onLogout()
                     if(currentDestinationId != R.id.homeFragment) {
-                        navController.navigate(R.id.action_to_home)
+                        navController?.navigate(R.id.action_to_home)
                         Log.e("MainActivity", "Logout clicked going to home")
                     }
                     else{
                         navController.navigate(R.id.action_to_login)
                         Log.e("MainActivity", "Logout clicked going to login")
+
                     }
+                    refreshBottomNav()
                     true
                 }
 
@@ -143,5 +134,8 @@ class MainActivity : AppCompatActivity() {
         refreshBottomNav()
 
     }
+        fun showBottomNav() {
+            binding?.bottomNav?.visibility = View.VISIBLE
+        }
+    }
 
-}

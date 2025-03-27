@@ -30,7 +30,6 @@ import androidx.compose.runtime.LaunchedEffect
 class RegisterFragment: Fragment() {
     private var binding : FragmentRegisterBinding? = null
     private lateinit var avatarUri: String
-    private val _binding get() = binding!!
 
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
 
@@ -70,6 +69,7 @@ class RegisterFragment: Fragment() {
     @OptIn(UnstableApi::class)
     private fun onRegister() {
         val username = binding?.usernameEditText?.text.toString()
+        binding?.usernameEditText?.requestFocus()
         val email = binding?.emailEditText?.text.toString()
         val password = binding?.passwordEditText?.text.toString()
 
@@ -104,7 +104,14 @@ class RegisterFragment: Fragment() {
                 )
                 LaunchedEffect(isLoading) {
                     if (!isLoading) {
+                        val fragment = requireActivity().supportFragmentManager.findFragmentById(R.id.action_to_register)
+                        fragment?.let {
+                            requireActivity().supportFragmentManager.beginTransaction()
+                                .remove(it)
+                                .commit()
+                        }
                         findNavController().navigate(R.id.action_to_login)
+
                     }
                 }
             }

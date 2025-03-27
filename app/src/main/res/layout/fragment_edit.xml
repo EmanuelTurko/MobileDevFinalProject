@@ -1,9 +1,9 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:layout_height="match_parent"
     tools:context=".fragments.EditFragment">
 
     <!-- Decorative Line (Top Drag Handle) -->
@@ -13,10 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="96dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="?attr/colorPrimaryVariant"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +72,6 @@
                 android:background="?attr/colorSurfaceVariant"
                 android:contentDescription="Recipe image"
                 android:scaleType="centerCrop"
-                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -97,17 +96,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_editText" />
 
-            <Button
-                android:id="@+id/post_btn"
-                android:layout_width="154dp"
-                android:layout_height="48dp"
+            <LinearLayout
+                android:id="@+id/button_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Post Recipe"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageUrl_imageView" />
+                app:layout_constraintTop_toBottomOf="@+id/imageUrl_imageView">
 
+                <Button
+                    android:id="@+id/update_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#4CAF50"
+                    android:text="Update"
+                    android:textColor="#FFFFFF" />
+
+                <Button
+                    android:id="@+id/delete_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#F44336"
+                    android:text="Delete"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

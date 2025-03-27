@@ -49,6 +49,12 @@ class LoginFragment : Fragment() {
         UserModel.shared.login(email, password, {
             Log.d("Login", "Login successful")
             UserModel.shared.setLoginState(true)
+            val fragment = requireActivity().supportFragmentManager.findFragmentById(R.id.action_to_login)
+            fragment?.let {
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .remove(it)
+                    .commit()
+            }
             findNavController().navigate(R.id.action_to_home)
         }, { error ->
                 binding?.loginBtn?.isEnabled = true

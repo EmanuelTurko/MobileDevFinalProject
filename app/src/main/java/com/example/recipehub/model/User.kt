@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "users")
 data class User(
     @ColumnInfo(name = "id")@PrimaryKey val id:String = "",
-    val username: String,
-    val email: String,
-    val password: String,
-    val avatarUrl: String,
-    @ColumnInfo(name = "recipes")val recipes: String? = "",
-    @ColumnInfo(name = "comments")val comments: String? ="",
+    val username: String = "",
+    val email: String = "",
+    val password: String = "",
+    val avatarUrl: String = "",
+    @ColumnInfo(name = "recipes")val recipes: List<String> = emptyList(),
+    @ColumnInfo(name = "comments")val comments: List<String> = emptyList<String>(),
 )

@@ -4,10 +4,42 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
-    <style name="BottomNavStyle" parent="Widget.Design.BottomNavigationView">
-        <item name="itemIconTint">@color/selector_icon</item>
-        <item name="itemTextColor">@color/selector_text</item>
+    <style name="BottomNavStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="itemBackground">@android:color/transparent</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="itemActiveIndicatorStyle">@style/NoActiveIndicator</item>
     </style>
+
+    <style name="NoActiveIndicator" parent="">
+        <item name="android:width">0dp</item>
+        <item name="android:height">0dp</item>
+    </style>
+
+    <style name="DialogThemeDark" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">#121212</item>
+        <item name="colorPrimaryVariant">#1D1D1D</item>
+        <item name="colorSecondaryVariant">#6C6B6B</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+    </style>
+    <style name="DialogAnimation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+    <style name="TransparentFragmentTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    <style name="Theme.RecipeHub" parent="Theme.Material3.DynamicColors.Dark.NoActionBar">
+           <item name="colorPrimary">#545454</item>
+        <item name="colorPrimaryVariant">#E0E2E6</item>
+        </style>
 </resources>

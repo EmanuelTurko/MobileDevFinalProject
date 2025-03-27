@@ -1,5 +1,6 @@
 package com.example.recipehub.fragments
 
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.net.Uri
 import android.os.Bundle
@@ -17,7 +18,10 @@ import com.example.recipehub.model.UserModel
 import com.example.recipehub.model.User
 import com.squareup.picasso.Picasso
 import androidx.core.net.toUri
+import com.example.recipehub.utils.getStringListShareRef
+import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.saveBitmapToFile
+import com.example.recipehub.utils.setStringShareRef
 import com.example.recipehub.utils.uriToBitmap
 
 class ProfileFragment : Fragment() {
@@ -53,13 +57,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadProfile() {
-        binding?.usernameEditText?.setText(getUserShareRef("username"))
-        binding?.emailEditText?.setText(getUserShareRef("email"))
-        binding?.passwordEditText?.setText(getUserShareRef("password"))
-        val comments = getUserShareRef("comments")
-        val recipes = getUserShareRef("recipes")
-        binding?.profileTextView?.text = getString(R.string.profile_textView, comments.length, recipes.length)
-        avatarUri = getUserShareRef("avatarUrl")
+        binding?.usernameEditText?.setText(requireContext().getStringShareRef("username", "userInfo"))
+        binding?.emailEditText?.setText(requireContext().getStringShareRef("email", "userInfo"))
+        binding?.passwordEditText?.setText(requireContext().getStringShareRef("password", "userInfo"))
+        avatarUri = requireContext().getStringShareRef("avatarUrl", "userInfo")
         Log.d("Profile", "Avatar URL: $avatarUri")
         if(avatarUri.startsWith("file://")){
             Log.d("Profile", "Loading image from file")
@@ -88,39 +89,28 @@ class ProfileFragment : Fragment() {
 
     private fun updateProfile() {
         val updatedUser = User(
-            id = getUserShareRef("id"),
-            username = binding?.usernameEditText?.text.toString().takeIf { it.isNotEmpty() } ?: getUserShareRef("username"),
-            email = binding?.emailEditText?.text.toString().takeIf { it.isNotEmpty() } ?: getUserShareRef("email"),
-            password = binding?.passwordEditText?.text.toString().takeIf { it.isNotEmpty() } ?: getUserShareRef("password"),
+            id = requireContext().getStringShareRef("id","userInfo"),
+            username = binding?.usernameEditText?.text.toString().takeIf { it.isNotEmpty() }
+                ?: requireContext().getStringShareRef("username","userInfo"),
+            email = binding?.emailEditText?.text.toString().takeIf { it.isNotEmpty() }
+                ?: requireContext().getStringShareRef("email","userInfo"),
+            password = binding?.passwordEditText?.text.toString().takeIf { it.isNotEmpty() }
+                ?: requireContext().getStringShareRef("password","userInfo"),
             avatarUrl = avatarUri,
-            recipes = getUserShareRef("recipes"),
-            comments = getUserShareRef("comments")
+            recipes = requireContext().getStringListShareRef("recipes", "userInfo"),
+            comments = requireContext().getStringListShareRef("comments", "userInfo")
         )
 
         UserModel.shared.updateUser(updatedUser, {
             binding?.updateProgressBar?.visibility = View.VISIBLE
             Log.d("Profile", "User updated")
-            setUserShareRef("username", updatedUser.username)
-            setUserShareRef("email", updatedUser.email)
-            setUserShareRef("password", updatedUser.password)
-            setUserShareRef("avatarUrl", updatedUser.avatarUrl)
+            requireContext().setStringShareRef("username", updatedUser.username, "userInfo")
+            requireContext().setStringShareRef("email", updatedUser.email, "userInfo")
+            requireContext().setStringShareRef("password", updatedUser.password, "userInfo")
+            requireContext().setStringShareRef("avatarUrl", updatedUser.avatarUrl, "userInfo")
             loadProfile()
         }, { error ->
             Log.e("Profile", error.message ?: "An error occurred")
         })
-    }
-
-    private fun getUserShareRef(resource: String): String {
-        val sharedPref = requireContext().getSharedPreferences("userInfo", MODE_PRIVATE)
-        return sharedPref?.getString(resource, "") ?: ""
-    }
-
-    private fun setUserShareRef(resource: String, value: String) {
-        val sharedPref = requireContext().getSharedPreferences("userInfo", MODE_PRIVATE)
-        sharedPref.edit().apply {
-            putString(resource, value)
-            putBoolean("isLoggedIn", true)
-            apply()
-        }
     }
 }
