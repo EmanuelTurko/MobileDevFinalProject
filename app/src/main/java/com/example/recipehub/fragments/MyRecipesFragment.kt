@@ -17,6 +17,7 @@ import com.example.recipehub.model.Recipe
 import com.example.recipehub.model.RecipeModel
 import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.setStringShareRef
+import com.example.recipehub.utils.setupUI
 
 class MyRecipesFragment :Fragment(){
     private var binding: FragmentMyRecipesBinding? = null
@@ -65,6 +66,10 @@ class MyRecipesFragment :Fragment(){
                 Log.e("Home", "Error fetching recipes", exception)
             }
         )
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
 
     override fun onDestroyView() {

@@ -39,7 +39,13 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
     <style name="Theme.RecipeHub" parent="Theme.Material3.DynamicColors.Dark.NoActionBar">
-           <item name="colorPrimary">#545454</item>
+           <item name="colorPrimary">#34545454</item>
         <item name="colorPrimaryVariant">#E0E2E6</item>
+        <item name="android:textColorHint">#A5BAC7</item>
         </style>
+    <style name="MyFilledButton" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
 </resources>

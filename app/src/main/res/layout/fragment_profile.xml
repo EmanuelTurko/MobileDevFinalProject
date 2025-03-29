@@ -35,6 +35,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="serif"
             android:gravity="center"
             android:hint="@string/Username"
             android:inputType="text"
@@ -55,6 +56,7 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="serif"
             android:gravity="center"
             android:hint="@string/Email"
             android:inputType="textEmailAddress"
@@ -75,6 +77,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="serif"
             android:gravity="center"
             android:hint="@string/Password"
             android:inputType="textPassword"
@@ -88,12 +91,13 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="166dp"
         android:layout_marginEnd="8dp"
+        android:fontFamily="serif"
         android:text="@string/submit"
         android:textColor="#EBEBEB"
-        app:rippleColor="#9CCFD4"
         app:layout_constraintEnd_toStartOf="@+id/reset_btn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_inputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/password_inputLayout"
+        app:rippleColor="@color/rippleColor" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/reset_btn"
@@ -102,12 +106,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="166dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="serif"
         android:text="@string/reset"
         android:textColor="#EBEBEB"
-        app:rippleColor="#B8C7CB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/submit_btn"
-        app:layout_constraintTop_toBottomOf="@+id/password_inputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/password_inputLayout"
+        app:rippleColor="@color/rippleColor" />
 
     <ProgressBar
         android:id="@+id/update_progressBar"

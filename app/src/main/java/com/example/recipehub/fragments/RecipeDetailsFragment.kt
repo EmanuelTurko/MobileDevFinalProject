@@ -14,6 +14,7 @@ import com.example.recipehub.model.Comment
 import com.example.recipehub.model.Recipe
 import com.example.recipehub.model.RecipeModel
 import com.example.recipehub.utils.getRecipeShareRef
+import com.example.recipehub.utils.setupUI
 
 class RecipeDetailsFragment:Fragment() {
 
@@ -34,6 +35,10 @@ class RecipeDetailsFragment:Fragment() {
         else{
             binding?.recipeImageView?.visibility = View.GONE
         }
+        RecipeModel.shared.calculateAverage(recipe.id,{ rating ->
+            binding?.recipeRatingBar?.rating = rating},{ exception ->
+            Log.e("RecipeDetails", "Failed to load rating: ${exception.message}")
+        })
         binding?.descriptionTextView?.text = recipe.description
         binding?.commentsRecyclerView?.layoutManager = LinearLayoutManager(context)
         RecipeModel.shared.getAllComments(recipe.id,{ commentList ->
@@ -62,6 +67,10 @@ class RecipeDetailsFragment:Fragment() {
                 Log.e("create", "Failed to add comment: ${exception.message}")
             })
         }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
     override fun onDestroy(){
         super.onDestroy()

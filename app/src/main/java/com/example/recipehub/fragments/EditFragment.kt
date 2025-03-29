@@ -23,6 +23,7 @@ import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.saveBitmapToFile
 import com.example.recipehub.utils.uriToBitmap
 import androidx.core.graphics.drawable.toDrawable
+import com.example.recipehub.utils.setupUI
 
 class EditFragment : Fragment() {
     private var binding: FragmentEditBinding? = null
@@ -72,10 +73,17 @@ class EditFragment : Fragment() {
             imageUrlImageView.setOnClickListener {
                 pickImageLauncher.launch("image/*")
             }
+            uploadBtn.setOnClickListener{
+                pickImageLauncher.launch("image/*")
+            }
             updateBtn.setOnClickListener { onUpdate() }
             deleteBtn.setOnClickListener { onDelete() }
         }
         return binding?.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
 
 
@@ -101,6 +109,7 @@ class EditFragment : Fragment() {
                 updatedRecipe,
                 {
                     Log.d("Edit", "Recipe updated")
+                    findNavController().popBackStack()
                 },
                 { exception ->
                     Log.e("Edit", "Failed to update recipe: ${exception.message}")

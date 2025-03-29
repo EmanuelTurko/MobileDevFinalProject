@@ -16,9 +16,11 @@ import com.example.recipehub.databinding.FragmentHomeBinding
 import com.example.recipehub.model.Recipe
 import com.example.recipehub.model.RecipeModel
 import com.example.recipehub.R
+import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.setStringShareRef
+import com.example.recipehub.utils.setupUI
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), RecipeAdapter.OnRatingClickListener {
     private var binding: FragmentHomeBinding? = null
     private lateinit var recipeAdapter:RecipeAdapter
     private lateinit var recipeList:MutableList<Recipe>
@@ -41,6 +43,7 @@ class HomeFragment : Fragment() {
             Log.d("Home", "recipe id: ${recipe.id}")
             Log.d("Home", "navigate to edit")
         })
+        recipeAdapter.onRatingClickListener = this
         recyclerView?.adapter = recipeAdapter
         recyclerView?.addItemDecoration(object: RecyclerView.ItemDecoration(){
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State){
@@ -65,6 +68,25 @@ class HomeFragment : Fragment() {
                 Log.e("Home", "Error fetching recipes", exception)
             }
         )
+    }
+    override fun onRatingClick(recipeId: String, rating: Float) {
+        Log.d("Home", "Rating clicked for recipe: $recipeId, rating: $rating")
+        saveRating(recipeId, rating)
+    }
+    private fun saveRating(recipeId: String, rating: Float) {
+        RecipeModel.shared.saveRating(recipeId, rating, requireContext().getStringShareRef("username","userInfo"),{ ->
+            Log.d("Home", "Rating saved for recipe: $recipeId")
+        }, { exception ->
+            Log.e("Home", "Error saving rating", exception)
+        })
+    }
+    override fun onResume(){
+        super.onResume()
+        recipeAdapter.notifyDataSetChanged()
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
 
     override fun onDestroyView() {

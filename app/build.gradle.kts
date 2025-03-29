@@ -88,4 +88,5 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.gson)
     implementation(libs.androidx.exifinterface)
+    implementation(libs.library)
 }

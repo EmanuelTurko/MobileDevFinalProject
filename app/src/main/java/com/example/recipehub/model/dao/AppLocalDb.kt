@@ -6,18 +6,20 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.recipehub.base.MyApplication
 import com.example.recipehub.model.Comment
+import com.example.recipehub.model.Rating
 import com.example.recipehub.model.Recipe
 import com.example.recipehub.model.User
 import com.example.recipehub.utils.Converters
 
 
-@Database(entities = [User::class, Recipe::class,Comment::class], version = 7)
+@Database(entities = [User::class, Recipe::class,Comment::class,Rating::class], version = 12)
 @TypeConverters(Converters::class)
 abstract class AppLocalDbRepository: RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun recipeDao(): RecipeDao
     abstract fun commentDao(): CommentDao
+    abstract fun ratingDao(): RatingDao
 
     companion object{
         var instance: AppLocalDbRepository? = null

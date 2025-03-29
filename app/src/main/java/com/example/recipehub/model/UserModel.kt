@@ -7,6 +7,7 @@ import androidx.core.os.HandlerCompat
 import com.example.recipehub.base.MyApplication.Companion.context
 import com.example.recipehub.model.dao.AppLocalDb
 import com.example.recipehub.model.dao.AppLocalDbRepository
+import com.example.recipehub.utils.getBooleanShareRef
 import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.setBooleanShareRef
 import com.example.recipehub.utils.setStringListShareRef
@@ -54,6 +55,9 @@ class UserModel private constructor() {
     }
     fun currentUser(field:String):String?{
         return context.getStringShareRef(field,"userInfo")
+    }
+    fun isLoggedIn(): Boolean {
+        return context.getBooleanShareRef("isLoggedIn", "userInfo")
     }
 
     fun addUser(user: User, callback: emptyCallback, onError: onError) {

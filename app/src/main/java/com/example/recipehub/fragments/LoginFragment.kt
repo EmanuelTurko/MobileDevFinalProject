@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.recipehub.R
 import com.example.recipehub.databinding.FragmentLoginBinding
 import com.example.recipehub.model.UserModel
+import com.example.recipehub.utils.setupUI
 
 class LoginFragment : Fragment() {
 
@@ -64,6 +65,10 @@ class LoginFragment : Fragment() {
                 }
             }
         )
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
 
 }

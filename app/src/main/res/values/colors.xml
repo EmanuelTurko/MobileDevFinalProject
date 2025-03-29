@@ -16,4 +16,5 @@
     <color name="defaultBG">#222222</color>
     <color name="semi_transparent_background">#80000000</color>
     <color name="color_primary">#585858</color>
+    <color name="rippleColor">#9CCFD4</color>
 </resources>

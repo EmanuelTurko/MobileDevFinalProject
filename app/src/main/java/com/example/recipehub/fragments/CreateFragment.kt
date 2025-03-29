@@ -16,6 +16,7 @@ import com.example.recipehub.model.Recipe
 import com.example.recipehub.model.RecipeModel
 import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.saveBitmapToFile
+import com.example.recipehub.utils.setupUI
 import com.example.recipehub.utils.uriToBitmap
 
 class CreateFragment : Fragment() {
@@ -26,7 +27,7 @@ class CreateFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): ConstraintLayout? {
+    ): View? {
         binding = FragmentCreateBinding.inflate(inflater, container, false)
 
         pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -84,6 +85,10 @@ class CreateFragment : Fragment() {
                 }
             )
         }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
     override fun onDestroyView() {
         binding = null

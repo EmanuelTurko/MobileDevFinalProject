@@ -1,6 +1,9 @@
 package com.example.recipehub.fragments
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,12 +29,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.recipehub.utils.SimulateLoading
 import androidx.compose.runtime.LaunchedEffect
+import com.example.recipehub.utils.setupUI
+import com.example.recipehub.utils.getCorrectlyOrientedBitmap
 
 class RegisterFragment: Fragment() {
     private var binding : FragmentRegisterBinding? = null
     private lateinit var avatarUri: String
-
-    private lateinit var pickImageLauncher: ActivityResultLauncher<String>
+    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,23 +46,47 @@ class RegisterFragment: Fragment() {
             findNavController().navigate(R.id.action_to_login)
         }
         avatarUri = blankAvatar()
-        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let { selectedUri ->
-                val bitmap = uriToBitmap(selectedUri, requireContext())
-                bitmap?.let {
-                    val fileUri = saveBitmapToFile(it, requireContext())
-                    fileUri?.let { uri ->
-                        avatarUri = uri.toString()
-                        binding?.avatarImageView?.setImageURI(uri)
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val uri = result.data?.data
+                uri?.let { selectedUri ->
+                    val rotatedBitmap = getCorrectlyOrientedBitmap(requireContext(), selectedUri) // ✅ Fix image rotation
+                    rotatedBitmap?.let { correctedBitmap ->
+                        val fileUri = saveBitmapToFile(correctedBitmap, requireContext()) // ✅ Save rotated image
+                        fileUri?.let { uri ->
+                            avatarUri = uri.toString()
+                            binding?.avatarImageView?.setImageURI(uri) // ✅ Display rotated image
+                            binding?.plusSignIcon?.visibility = View.INVISIBLE
+                        }
                     }
                 }
             }
         }
-        binding?.avatarImageView?.setOnClickListener{ pickImageLauncher.launch("image/*") }
+//        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+//            uri?.let { selectedUri ->
+//                val bitmap = uriToBitmap(selectedUri, requireContext())
+//                bitmap?.let {
+//                    val fileUri = saveBitmapToFile(it, requireContext())
+//                    fileUri?.let { uri ->
+//                        avatarUri = uri.toString()
+//                        binding?.avatarImageView?.setImageURI(uri)
+//                    }
+//                }
+//            }
+//        }
+        binding?.usernameEditText?.requestFocus()
+        binding?.emailEditText?.requestFocus()
+        binding?.passwordEditText?.requestFocus()
+        binding?.avatarImageView?.setOnClickListener{ val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickImageLauncher.launch(intent) }
         binding?.registerBtn?.setOnClickListener{ onRegister() }
 
 
         return binding?.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
 
     override fun onDestroyView() {

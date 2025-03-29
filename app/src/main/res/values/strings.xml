@@ -14,13 +14,13 @@
     <string name="register_ref"><u>Register</u></string>
     <string name="registerFragment">Register</string>
     <string name="loginFragment">Login</string>
-    <string name="login_bottom_nav_menu" />
-    <string name="register_bottom_nav_menu" />
-    <string name="profile_bottom_nav_menu" />
-    <string name="logout_bottom_nav_menu" />
-    <string name="create_bottom_nav_menu" />
-    <string name="my_recipes_bottom_nav_menu" />
-    <string name="home_bottom_nav_menu" />
+    <string name="login_bottom_nav_menu">Login</string>
+    <string name="register_bottom_nav_menu">Register</string>
+    <string name="profile_bottom_nav_menu">Profile</string>
+    <string name="logout_bottom_nav_menu">Logout</string>
+    <string name="create_bottom_nav_menu">Create</string>
+    <string name="my_recipes_bottom_nav_menu">My Recipes</string>
+    <string name="home_bottom_nav_menu">Home </string>
     <string name="homeFragment">Home</string>
     <string name="profileFragment">Profile</string>
     <string name="reset">Reset</string>
@@ -32,4 +32,5 @@
     <string name="recipeDetailsFragment" />
     <string name="EditFragment" />
     <string name="myRecipesFragment" />
+    <string name="empty" />
 </resources>

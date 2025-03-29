@@ -1,14 +1,18 @@
+package com.example.recipehub.utils
+
 import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.core.content.ContextCompat
 import android.view.inputmethod.InputMethodManager
 
 fun Activity.hideSoftKeyboard() {
     currentFocus?.let {
-        val inputMethodManager = ContextCompat.getSystemService(this, InputMethodManager::class.java)
-        inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0)
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentFocusedView = currentFocus
+        currentFocusedView?.let {
+            inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 }
 fun Activity.setupUI(view: View) {

@@ -6,6 +6,8 @@ import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.memoryCacheSettings
 import java.util.Date
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.example.recipehub.utils.getStringShareRef
 
 class RecipeFirebaseModel {
 
@@ -19,7 +21,7 @@ class RecipeFirebaseModel {
         database.firestoreSettings = setting
     }
 
-    fun create(recipe: Recipe, onSuccess: recipeCallback, onError:onError) {
+    fun create(recipe: Recipe, onSuccess: recipeCallback, onError: onError) {
         Log.d("Create", "Creating recipe $recipe")
         val recipeRef = database.collection("recipes")
         val documentId = recipeRef.document().id
@@ -28,7 +30,7 @@ class RecipeFirebaseModel {
             id = documentId,
             date = Date()
         )
-        UserFirebaseModel().getUserByUsername(recipeData.author,{ user ->
+        UserFirebaseModel().getUserByUsername(recipeData.author, { user ->
             user?.let {
                 val updatedRecipes = it.recipes.toMutableList()
                 updatedRecipes.add(documentId)
@@ -71,7 +73,7 @@ class RecipeFirebaseModel {
     }
 
 
-    fun getAllRecipes(onSuccess: recipeListCallback, onError:onError) {
+    fun getAllRecipes(onSuccess: recipeListCallback, onError: onError) {
         database.collection("recipes")
             .get()
             .addOnSuccessListener { result ->
@@ -83,22 +85,27 @@ class RecipeFirebaseModel {
             }
     }
 
-    fun getRecipeById(recipeId:String, onSuccess: recipeCallback, onError:onError){
+    fun getRecipeById(recipeId: String, onSuccess: recipeCallback, onError: onError) {
         val recipeRef = database.collection("recipes").document(recipeId)
         recipeRef.get()
-            .addOnSuccessListener{ recipe ->
+            .addOnSuccessListener { recipe ->
                 val recipeData = recipe.toObject(Recipe::class.java)
                 recipeData?.let {
                     onSuccess(it)
                 } ?: onError(Exception("Failed to get recipe"))
             }
-            .addOnFailureListener { exception->
+            .addOnFailureListener { exception ->
                 onError(exception)
             }
 
     }
 
-    fun updateRecipe(recipeId:String, recipe:Recipe, onSuccess: recipeCallback, onError:onError){
+    fun updateRecipe(
+        recipeId: String,
+        recipe: Recipe,
+        onSuccess: recipeCallback,
+        onError: onError
+    ) {
         val recipeRef = database.collection("recipes").document(recipeId)
         val updatedJson = hashMapOf(
             "title" to recipe.title,
@@ -108,7 +115,7 @@ class RecipeFirebaseModel {
             "imageUrl" to recipe.imageUrl,
             "comments" to recipe.comments,
         )
-        recipeRef.update(updatedJson as Map<String,Any?>)
+        recipeRef.update(updatedJson as Map<String, Any?>)
             .addOnSuccessListener {
                 Log.d("Create", "Recipe updated successfully")
                 onSuccess(recipe)
@@ -118,7 +125,13 @@ class RecipeFirebaseModel {
             }
     }
 
-    fun addComment(recipeId: String, poster: String, comment: String, onSuccess: (Comment) -> Unit, onError: (Exception) -> Unit) {
+    fun addComment(
+        recipeId: String,
+        poster: String,
+        comment: String,
+        onSuccess: (Comment) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         val commentRef = database.collection("recipes").document(recipeId).collection("comments")
 
         getRecipeById(
@@ -166,7 +179,7 @@ class RecipeFirebaseModel {
     }
 
 
-    fun getAllComments(recipeId:String, onSuccess: commentListCallback,onError:onError){
+    fun getAllComments(recipeId: String, onSuccess: commentListCallback, onError: onError) {
         val commentRef = database.collection("recipes").document(recipeId).collection("comments")
         commentRef.get()
             .addOnSuccessListener { result ->
@@ -178,17 +191,19 @@ class RecipeFirebaseModel {
             }
 
     }
-    fun deleteRecipe(recipeId:String, onSuccess: emptyCallback, onError:onError){
+
+    fun deleteRecipe(recipeId: String, onSuccess: emptyCallback, onError: onError) {
         val recipeRef = database.collection("recipes").document(recipeId)
         recipeRef.delete()
-            .addOnSuccessListener{ _ ->
+            .addOnSuccessListener { _ ->
                 onSuccess()
             }
             .addOnFailureListener { exception ->
                 onError(exception)
             }
     }
-    fun getRecipeByAuthor(author:String, onSuccess: recipeListCallback, onError: onError){
+
+    fun getRecipeByAuthor(author: String, onSuccess: recipeListCallback, onError: onError) {
         database.collection("recipes")
             .whereEqualTo("author", author)
             .get()
@@ -196,8 +211,75 @@ class RecipeFirebaseModel {
                 val recipeList = recipes.documents.mapNotNull { it.toObject(Recipe::class.java) }
                 onSuccess(recipeList)
             }
-            .addOnFailureListener{ exception ->
+            .addOnFailureListener { exception ->
                 onError(exception)
             }
+    }
+
+    fun saveRating(
+        recipeId: String,
+        rating: Float,
+        username: String,
+        onSuccess: (ratingList: MutableList<Rating>) -> Unit,
+        onError: (exception: Exception) -> Unit
+    ) {
+        Log.d("rating", "Step 1: Fetching recipeRef")
+        val recipeRef = database.collection("recipes").document(recipeId)
+
+        recipeRef.get()
+            .addOnSuccessListener { documentRating ->
+                Log.d("rating", "Step 2: Retrieved document from Firebase")
+
+                // Get the existing ratings from Firebase
+                val currentRating =
+                    documentRating.get("rating") as? List<Map<String, Any>> ?: mutableListOf()
+                Log.d("rating", "Step 3: Extracted current ratings")
+
+                val updatedRating = currentRating.toMutableList()
+
+                // Create a new Rating object
+                val newRating = Rating(
+                    recipeId = recipeId,
+                    username = username,
+                    rating = rating.toFloat()
+                )
+                Log.d("rating", "Step 4: Created new Rating object")
+
+                // Convert Rating object to Map (for Firebase)
+                val newRatingMap = mapOf(
+                    "recipeId" to recipeId,
+                    "username" to newRating.username,
+                    "rating" to newRating.rating
+                )
+                Log.d("rating", "Step 5: Converted new Rating to Map")
+
+                // Add the new rating to the list
+                updatedRating.add(newRatingMap)
+                Log.d("rating", "Step 6: Added new rating to list")
+
+                // Update the ratings in Firebase
+                recipeRef.update("rating", updatedRating)
+                    .addOnSuccessListener {
+                        Log.d("rating", "Step 7: Updated Firebase successfully")
+
+                        val updatedRatingList = updatedRating.map {
+                            Rating(
+                                username = it["username"] as String,
+                                rating = (it["rating"] as Number).toFloat()
+                            )
+                        }.toMutableList()
+
+                        onSuccess(updatedRatingList)
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("rating", "Step 8: Failed to update Firebase", exception)
+                        onError(exception)
+                    }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("rating", "Step 9: Failed to fetch recipe data", exception)
+                onError(exception)
+            }
+
     }
 }

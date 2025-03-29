@@ -1,22 +1,19 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:material="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:padding="16dp"
     tools:context=".fragments.EditFragment">
 
-    <!-- Decorative Line (Top Drag Handle) -->
-
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/recipe_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="84dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="?attr/colorPrimaryVariant"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,85 +27,100 @@
             android:padding="16dp">
 
             <!-- Title Input -->
-            <EditText
-                android:id="@+id/title_editText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/title_input_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/colorPrimary"
-                android:hint="Recipe Title"
-                android:padding="12dp"
-                android:textColor="?attr/colorOnPrimary"
-                android:textColorHint="#AAAAAA"
+                android:layout_marginTop="12dp"
+                app:boxStrokeColor="@color/rippleColor"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/rippleColor"
                 app:layout_constraintEnd_toStartOf="@+id/upload_btn"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/title_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Recipe Title"
+                    android:inputType="text"
+                    android:padding="12dp"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textColorHint="@color/rippleColor" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Upload Button -->
-            <ImageButton
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/upload_btn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Upload Image"
-                android:src="@drawable/ic_home_bottom_nav_menu"
-                app:layout_constraintBottom_toBottomOf="@id/title_editText"
+                android:src="@drawable/ic_add_photo_white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title_editText" />
+                app:layout_constraintTop_toTopOf="@id/title_input_layout" />
 
-            <!-- Image View with fixed aspect ratio -->
+            <!-- Image View (Hidden Until Image Is Added) -->
 
             <!-- Description Input -->
 
-            <!-- Action Buttons - Now properly constrained to bottom -->
-
             <ImageView
                 android:id="@+id/imageUrl_imageView"
-                android:layout_width="345dp"
-                android:layout_height="366dp"
-                android:layout_marginTop="24dp"
-                android:adjustViewBounds="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="?attr/colorSurfaceVariant"
-                android:contentDescription="Recipe image"
+                android:contentDescription="Recipe Image"
                 android:scaleType="centerCrop"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description_editText" />
+                app:layout_constraintTop_toBottomOf="@+id/title_input_layout" />
 
-            <EditText
-                android:id="@+id/description_editText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/description_input_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:background="#333333"
                 android:hint="Description"
-                android:inputType="textMultiLine"
-                android:lines="5"
-                android:maxLines="8"
-                android:minLines="3"
-                android:padding="12dp"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#AAAAAA"
+                app:boxStrokeColor="@color/rippleColor"
+                app:hintTextColor="@color/rippleColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageUrl_imageView">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/description_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:maxLines="8"
+                    android:minLines="3"
+                    android:padding="12dp"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#AAAAAA" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Post Recipe Button -->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/post_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="84dp"
+                android:text="Post Recipe"
+                android:textColor="#EBEBEB"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_editText" />
-
-            <Button
-                android:id="@+id/post_btn"
-                android:layout_width="154dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="24dp"
-                android:text="Post Recipe"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageUrl_imageView" />
-
+                app:layout_constraintTop_toBottomOf="@+id/description_input_layout"
+                app:rippleColor="@color/rippleColor" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.core.widget.NestedScrollView>

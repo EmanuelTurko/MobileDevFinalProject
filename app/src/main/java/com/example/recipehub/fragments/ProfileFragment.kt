@@ -22,6 +22,7 @@ import com.example.recipehub.utils.getStringListShareRef
 import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.saveBitmapToFile
 import com.example.recipehub.utils.setStringShareRef
+import com.example.recipehub.utils.setupUI
 import com.example.recipehub.utils.uriToBitmap
 
 class ProfileFragment : Fragment() {
@@ -70,6 +71,10 @@ class ProfileFragment : Fragment() {
         else if(avatarUri.startsWith("http")){
             binding?.avatarImageView?.let { loadImageWithPicasso(avatarUri,it)}
         }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().setupUI(view)
     }
 
     private fun loadImageWithPicasso(url: String, imageView: ImageView) {
