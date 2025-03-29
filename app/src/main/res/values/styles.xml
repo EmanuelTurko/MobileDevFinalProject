@@ -31,8 +31,8 @@
         <item name="android:backgroundDimAmount">0.3</item>
     </style>
     <style name="DialogAnimation" parent="@android:style/Animation.Dialog">
-        <item name="android:windowEnterAnimation">@anim/slide_up</item>
-        <item name="android:windowExitAnimation">@anim/slide_down</item>
+        <item name="android:windowEnterAnimation">@anim/slide_out_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_in_bottom</item>
     </style>
     <style name="TransparentFragmentTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>

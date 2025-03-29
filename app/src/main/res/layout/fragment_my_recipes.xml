@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
-
-    <!-- RecyclerView with edge-to-edge design -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipes_recyclerView"
         android:layout_width="match_parent"
@@ -13,8 +11,6 @@
         android:clipToPadding="false"
         android:overScrollMode="never"
         android:paddingVertical="32dp" />
-
-    <!-- Optional: Empty state view -->
     <TextView
         android:id="@+id/empty_state_view"
         style="@style/TextAppearance.MaterialComponents.Headline5"
@@ -23,5 +19,4 @@
         android:layout_gravity="center"
         android:text="No recipes found"
         android:visibility="gone" />
-
 </FrameLayout>

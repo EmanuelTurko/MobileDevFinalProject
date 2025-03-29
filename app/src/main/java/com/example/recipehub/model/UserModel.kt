@@ -67,7 +67,6 @@ class UserModel private constructor() {
                 try {
                     database.userDao().insertUser(updatedUser)
                     mainHandler.post {
-                        Log.d("Register", "user added to local database")
                         callback()
                     }
                 } catch (exception: Exception) {
@@ -83,29 +82,21 @@ class UserModel private constructor() {
         userFirebaseModel.updateUser(user,callback, onError)
             executor.execute {
                 try {
+
                     database.userDao().updateUser(user)
+                    Log.d("Update", "updated user with ${user.avatarUrl}")
                     userSharedPref(user)
                     mainHandler.post {
-                        Log.d("Profile", "user updated in local database")
                         printSharedPref()
                         callback()
                     }
                 } catch (exception: Exception) {
                     mainHandler.post {
-                        Log.e("Profile", "Failed to update user in local database")
+                        Log.e("Update", "Failed to update user in local database")
                         onError(exception)
                     }
                 }
             }
-    }
-
-    fun getUserById(callback: userCallback, id: String) {
-        executor.execute{
-            val userId = database.userDao().getUserById(id)
-            mainHandler.post {
-                callback(userId)
-            }
-        }
     }
 
     fun getUserByUsername(username: String, callback: (User?) -> Unit, onError: (Exception) -> Unit) {
@@ -126,32 +117,46 @@ class UserModel private constructor() {
         }
     }
 
-    fun getUserByEmail(callback: userCallback, email: String) {
-        executor.execute{
-            val userEmail = database.userDao().getUserByEmail(email)
-            mainHandler.post {
-                callback(userEmail)
-            }
-        }
-    }
-
     fun login(email: String, password: String, callback: emptyCallback, onError: onError) {
-        userFirebaseModel.login(email, password, {
-            executor.execute {
-                try {
-                    val userEmail = database.userDao().getUserByEmail(email)
-                    if (userEmail.password == password) {
+        executor.execute {
+            try {
+                val user = database.userDao().getUserByEmail(email)
+                if(true){
+                    if (user.password == password) {
+                        userSharedPref(user)
                         mainHandler.post {
-                            userSharedPref(userEmail)
                             callback()
                         }
                     }
-                } catch (exception: Exception) {
-                    mainHandler.post {
-                        onError(exception)
+                    else{
+                        mainHandler.post {
+                            onError(Exception("Invalid credentials"))
+                        }
                     }
+                } else {
+                    userFirebaseModel.login(email, password, { user ->
+                        executor.execute {
+                           if(user != null){
+                                database.userDao().insertUser(user)
+                                userSharedPref(user)
+                                mainHandler.post {
+                                    Log.d("Login", "User logged in (Firebase)")
+                                    callback()
+                                }
+                            }
+                        } }, { exception ->
+                        mainHandler.post {
+                            Log.e("Login", "Firebase Login Error: ${exception.message}")
+                            onError(exception)
+                        }
+                    })
+                }
+            } catch (e: Exception) {
+                mainHandler.post {
+                    Log.e("Login", "Local DB Error: ${e.message}")
+                    onError(e)
                 }
             }
-        }, onError)
+        }
     }
 }

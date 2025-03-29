@@ -1,10 +1,13 @@
 package com.example.recipehub.fragments
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,12 +26,13 @@ import com.example.recipehub.utils.getStringShareRef
 import com.example.recipehub.utils.saveBitmapToFile
 import com.example.recipehub.utils.uriToBitmap
 import androidx.core.graphics.drawable.toDrawable
+import com.example.recipehub.utils.getCorrectlyOrientedBitmap
 import com.example.recipehub.utils.setupUI
 
 class EditFragment : Fragment() {
     private var binding: FragmentEditBinding? = null
     private lateinit var editableRecipe: Recipe
-    private lateinit var pickImageLauncher: ActivityResultLauncher<String>
+    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private var imageUrl: String = ""
 
 
@@ -56,26 +60,26 @@ class EditFragment : Fragment() {
                 Log.e("Edit", "Failed to load recipe: ${exception.message}")
             }
         )
-        pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let { selectedUri ->
-                val bitmap = uriToBitmap(selectedUri, requireContext())
-                bitmap?.let {
-                    val fileUri = saveBitmapToFile(it, requireContext())
-                    fileUri?.let { uri ->
-                        Log.d("Profile", "new avatar: $uri")
-                        imageUrl = uri.toString()
-                        binding?.imageUrlImageView?.setImageURI(uri)
+        pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val uri = result.data?.data
+                uri?.let { selectedUri ->
+                    val rotatedBitmap = getCorrectlyOrientedBitmap(requireContext(), selectedUri)
+                    rotatedBitmap?.let { correctedBitmap ->
+                        val fileUri = saveBitmapToFile(correctedBitmap, requireContext())
+                        fileUri?.let { uri ->
+                            imageUrl = uri.toString()
+                            binding?.imageUrlImageView?.setImageURI(uri)
+                        }
                     }
                 }
             }
         }
+        binding?.uploadBtn?.setOnClickListener{ val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickImageLauncher.launch(intent) }
+        binding?.imageUrlImageView?.setOnClickListener{ val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickImageLauncher.launch(intent) }
         binding?.apply {
-            imageUrlImageView.setOnClickListener {
-                pickImageLauncher.launch("image/*")
-            }
-            uploadBtn.setOnClickListener{
-                pickImageLauncher.launch("image/*")
-            }
             updateBtn.setOnClickListener { onUpdate() }
             deleteBtn.setOnClickListener { onDelete() }
         }
@@ -85,8 +89,6 @@ class EditFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().setupUI(view)
     }
-
-
     private fun onUpdate() {
         binding?.apply {
             val title = titleEditText.text.toString().takeIf { it.isNotEmpty() }
@@ -103,12 +105,10 @@ class EditFragment : Fragment() {
                 imageUrl,
                 editableRecipe.author
             )
-
             RecipeModel.shared.updateRecipe(
                 updatedRecipe.id,
                 updatedRecipe,
                 {
-                    Log.d("Edit", "Recipe updated")
                     findNavController().popBackStack()
                 },
                 { exception ->
@@ -122,7 +122,6 @@ class EditFragment : Fragment() {
         RecipeModel.shared.deleteRecipe(
             editableRecipe.id,
             {
-                Log.d("Edit", "Recipe deleted")
                 findNavController().popBackStack()
             },
             { exception ->

@@ -33,13 +33,9 @@ class MyRecipesFragment :Fragment(){
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recipeList = mutableListOf()
         recipeAdapter = RecipeAdapter(recipeList, { recipe ->
-            findNavController().navigate(R.id.action_to_recipeDetails)
-            Log.d("Home", "Selected recipe: ${recipe.title}") }, { recipe ->
+            findNavController().navigate(R.id.action_to_recipeDetails) }, { recipe ->
             requireContext().setStringShareRef("id", recipe.id, "recipeInfo")
-            Log.d("Home", "Selected recipe: ${recipe.id}")
             findNavController().navigate(R.id.action_to_edit)
-            Log.d("Home", "recipe id: ${recipe.id}")
-            Log.d("Home", "navigate to edit")
         })
         recyclerView?.adapter = recipeAdapter
         recyclerView?.addItemDecoration(object: RecyclerView.ItemDecoration(){
@@ -51,14 +47,12 @@ class MyRecipesFragment :Fragment(){
 
         return binding?.root
     }
-
     private fun fetchRecipes(){
         val author = requireContext().getStringShareRef("username", "userInfo")
         RecipeModel.shared.getRecipesByAuthor(author,
             { recipes ->
                 val initialSize = recipeList.size
                 recipeList.addAll(recipes)
-                Log.d("Home", "Fetched ${recipes.size} recipes")
                 if(recipeList.isNotEmpty()) recipeAdapter.notifyItemRangeInserted(initialSize, recipes.size)
             },
             { exception ->

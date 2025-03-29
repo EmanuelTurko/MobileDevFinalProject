@@ -23,7 +23,6 @@ class CommentModel {
             try {
                 database.commentDao().insertComment(comment)
                 mainHandler.post {
-                    Log.d("Register", "user added to local database")
                     callback()
                 }
             } catch (exception: Exception) {

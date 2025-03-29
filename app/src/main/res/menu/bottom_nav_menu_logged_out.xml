@@ -6,7 +6,7 @@
         android:title="@string/home_bottom_nav_menu" />
     <item
         android:id="@+id/myRecipes"
-        android:icon="@drawable/ic_home_bottom_nav_menu"
+        android:icon="@drawable/ic_my_recipes_white"
         android:title="@string/my_recipes_bottom_nav_menu" />
 
     <item

@@ -26,7 +26,7 @@ class UserFirebaseModel {
         val existingUser = auth.currentUser
         if (existingUser != null && existingUser.email == user.email) {
             Log.e("Register", "User already exists with email: ${user.email}")
-            callback(user)
+            onError(Exception("account already exists with email: ${user.email}"))
             return
         }
 
@@ -58,8 +58,7 @@ class UserFirebaseModel {
                                         }
                                         .addOnFailureListener { exception ->
                                             Log.e(
-                                                "Register",
-                                                "Error adding document: ${exception.message}"
+                                                "Register", "Error adding document: ${exception.message}"
                                             )
                                             onError(exception)
                                         }
@@ -68,8 +67,7 @@ class UserFirebaseModel {
                                 task.exception?.let { exception ->
                                     if (exception is FirebaseAuthUserCollisionException) {
                                         Log.e(
-                                            "Register",
-                                            "FirebaseAuthUserCollisionException: ${exception.message}"
+                                            "Register", "FirebaseAuthUserCollisionException: ${exception.message}"
                                         )
                                         onError(exception)
                                     } else {
@@ -106,7 +104,6 @@ class UserFirebaseModel {
     }
 
     fun updateUser(user: User, callback: emptyCallback, onError: (Exception) -> Unit) {
-        Log.d("ProfileFragment", "Updating user.................")
         val userId = auth.currentUser?.uid
         if (userId == null) {
             onError(Exception("User not authenticated"))
@@ -123,23 +120,25 @@ class UserFirebaseModel {
         )
         userRef.update(updatedJson as Map<String, Any>)
             .addOnSuccessListener {
-                Log.d("Firebase", "user successfully updated!")
                 callback()
             }
             .addOnFailureListener { exception ->
-                Log.e("Firebase", "Error updating user: ${exception.message}")
+                Log.e("Update", "Error updating user: ${exception.message}")
                 onError(exception)
             }
     }
 
-    fun getUserByUsername(username: String, callback: (User?) -> Unit, onError: (Exception) -> Unit) {
+    fun getUserByUsername(
+        username: String,
+        callback: (User?) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         database.collection("users")
             .whereEqualTo("username", username)
             .get()
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
                     val user = documents.documents[0].toObject(User::class.java)
-                    Log.d("Create", "User found: ${user?.id}")
                     callback(user)
                 } else {
                     Log.e("Create", "No user found with username: $username")
@@ -155,36 +154,56 @@ class UserFirebaseModel {
     fun login(
         email: String,
         password: String,
-        onSuccess: () -> Unit,
+        onSuccess: (User?) -> Unit,
         onError: (Exception) -> Unit
     ) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                onSuccess()
-            }
-            .addOnFailureListener { exception ->
-                when (exception) {
-                    is FirebaseAuthInvalidUserException -> {
-                        Log.e(
-                            "Login",
-                            "FirebaseAuthInvalidUserException: ${exception.message}"
-                        )
-                        onError(exception)
-                    }
+                database.collection("users")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener { user ->
+                        if (user.isEmpty) {
+                            Log.e("Login", "No user found with this email")
+                            onError(Exception("No user found with this email"))
+                        } else {
+                            val document = user.documents[0]
+                            val updatedUser =
+                                document.toObject(User::class.java)
 
-                    is FirebaseAuthInvalidCredentialsException -> {
-                        Log.e(
-                            "Login",
-                            "FirebaseAuthInvalidCredentialsException: ${exception.message}"
-                        )
-                        onError(exception)
+                            if (updatedUser != null) {
+                                onSuccess(updatedUser)
+                            } else {
+                                Log.e("Login", "User object is null")
+                                onError(Exception("User data is corrupted"))
+                            }
+                        }
                     }
+                    .addOnFailureListener { exception ->
+                        Log.e("Login", "Error retrieving user: ${exception.message}")
+                        onError(Exception("Invalid credentials"))
+                    }
+                    .addOnFailureListener { exception ->
+                        when (exception) {
+                            is FirebaseAuthInvalidUserException -> {
+                                Log.e(
+                                    "Login", "FirebaseAuthInvalidUserException: ${exception.message}"
+                                )
+                                onError(Exception("Invalid credentials"))
+                            }
 
-                    else -> {
-                        Log.e("Login", "Unknown error: ${exception.message}")
-                        onError(exception)
+                            is FirebaseAuthInvalidCredentialsException -> {
+                                Log.e(
+                                    "Login", "FirebaseAuthInvalidCredentialsException: ${exception.message}"
+                                )
+                                onError(Exception("Invalid credentials"))
+                            }
+                            else -> {
+                                Log.e("Login", "Unknown error: ${exception.message}")
+                                onError(exception)
+                            }
+                        }
                     }
-                }
             }
     }
 }

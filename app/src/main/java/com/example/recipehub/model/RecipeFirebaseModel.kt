@@ -22,10 +22,8 @@ class RecipeFirebaseModel {
     }
 
     fun create(recipe: Recipe, onSuccess: recipeCallback, onError: onError) {
-        Log.d("Create", "Creating recipe $recipe")
         val recipeRef = database.collection("recipes")
         val documentId = recipeRef.document().id
-        Log.d("Create", "Creating recipe 1 $documentId")
         val recipeData = recipe.copy(
             id = documentId,
             date = Date()
@@ -36,7 +34,7 @@ class RecipeFirebaseModel {
                 updatedRecipes.add(documentId)
                 val userRef = database.collection("users").document(it.id)
                 userRef.update("recipes", updatedRecipes)
-                    .addOnSuccessListener { Log.d("Create", "added recipe to user") }
+                    .addOnSuccessListener {  }
                     .addOnFailureListener { exception ->
                         Log.e("Create", "Failed to add recipe to user", exception)
                         onError(exception)
@@ -50,15 +48,10 @@ class RecipeFirebaseModel {
             .addOnSuccessListener {
                 recipeRef.document(documentId).get()
                     .addOnSuccessListener { documentSnapshot ->
-                        Log.d("Create", "Creating recipe 3 $documentSnapshot")
                         val recipeFromDb = documentSnapshot.toObject(Recipe::class.java)
-                        Log.d("Create", "Creating recipe 4 $recipeFromDb")
                         val timestamp = documentSnapshot.get("date") as? Timestamp
-                        Log.d("Create", "Creating recipe 5 $timestamp")
                         val date = timestamp?.toDate()
-                        Log.d("Create", "Creating recipe 6 $date")
                         val updatedRecipe = recipeFromDb?.copy(date = date)
-                        Log.d("Create", "Creating recipe 7 $updatedRecipe")
 
                         updatedRecipe?.let {
                             onSuccess(updatedRecipe)
@@ -117,7 +110,6 @@ class RecipeFirebaseModel {
         )
         recipeRef.update(updatedJson as Map<String, Any?>)
             .addOnSuccessListener {
-                Log.d("Create", "Recipe updated successfully")
                 onSuccess(recipe)
             }
             .addOnFailureListener { exception ->
@@ -138,6 +130,7 @@ class RecipeFirebaseModel {
             recipeId,
             onSuccess = { recipe: Recipe ->
                 val newComment = Comment(
+                    recipeId = recipeId,
                     poster = poster,
                     content = comment,
                     date = Date()
@@ -158,7 +151,6 @@ class RecipeFirebaseModel {
                                             date = date
                                         )
                                         finalUpdatedComment?.let {
-                                            Log.d("Create", "Comment updated with ID and date")
                                             onSuccess(it)
                                         } ?: onError(Exception("Failed to add comment"))
                                     }
@@ -223,52 +215,34 @@ class RecipeFirebaseModel {
         onSuccess: (ratingList: MutableList<Rating>) -> Unit,
         onError: (exception: Exception) -> Unit
     ) {
-        Log.d("rating", "Step 1: Fetching recipeRef")
         val recipeRef = database.collection("recipes").document(recipeId)
 
         recipeRef.get()
             .addOnSuccessListener { documentRating ->
-                Log.d("rating", "Step 2: Retrieved document from Firebase")
-
-                // Get the existing ratings from Firebase
                 val currentRating =
                     documentRating.get("rating") as? List<Map<String, Any>> ?: mutableListOf()
                 Log.d("rating", "Step 3: Extracted current ratings")
-
                 val updatedRating = currentRating.toMutableList()
 
-                // Create a new Rating object
                 val newRating = Rating(
                     recipeId = recipeId,
                     username = username,
                     rating = rating.toFloat()
                 )
-                Log.d("rating", "Step 4: Created new Rating object")
-
-                // Convert Rating object to Map (for Firebase)
                 val newRatingMap = mapOf(
                     "recipeId" to recipeId,
                     "username" to newRating.username,
                     "rating" to newRating.rating
                 )
-                Log.d("rating", "Step 5: Converted new Rating to Map")
-
-                // Add the new rating to the list
                 updatedRating.add(newRatingMap)
-                Log.d("rating", "Step 6: Added new rating to list")
-
-                // Update the ratings in Firebase
                 recipeRef.update("rating", updatedRating)
                     .addOnSuccessListener {
-                        Log.d("rating", "Step 7: Updated Firebase successfully")
-
                         val updatedRatingList = updatedRating.map {
                             Rating(
                                 username = it["username"] as String,
                                 rating = (it["rating"] as Number).toFloat()
                             )
                         }.toMutableList()
-
                         onSuccess(updatedRatingList)
                     }
                     .addOnFailureListener { exception ->
@@ -281,5 +255,43 @@ class RecipeFirebaseModel {
                 onError(exception)
             }
 
+    }
+    fun updateAuthorName(authorName: String, newAuthorName: String, onSuccess: emptyCallback, onError: onError) {
+        getRecipeByAuthor(authorName, { recipes ->
+            var recipesUpdated = 0
+            var commentsUpdated = 0
+            val totalRecipes = recipes.size
+            var totalComments = 0
+            for (recipe in recipes) {
+                getAllComments(recipe.id, { comments ->
+                    totalComments += comments.size
+                    for (comment in comments) {
+                        val commentRef = database.collection("recipes").document(recipe.id)
+                            .collection("comments").document(comment.id)
+                        commentRef.update("poster", newAuthorName)
+                            .addOnSuccessListener {
+                                commentsUpdated++
+                                if (commentsUpdated == totalComments && recipesUpdated == totalRecipes) {
+                                    onSuccess()
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.e("Update", "Failed to update comment", exception)
+                            }
+                    }
+                }, onError)
+                val recipeRef = database.collection("recipes").document(recipe.id)
+                recipeRef.update("author", newAuthorName)
+                    .addOnSuccessListener {
+                        recipesUpdated++
+                        if (recipesUpdated == totalRecipes && commentsUpdated == totalComments) {
+                            onSuccess()
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("Update", "Failed to update recipe", exception)
+                    }
+            }
+        }, onError)
     }
 }

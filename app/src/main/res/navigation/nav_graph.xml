@@ -1,9 +1,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:startDestination="@id/bootFragment">
-
-
-    <!-- MyRecipesFragment - done -->
     <fragment
         android:id="@+id/myRecipesFragment"
         android:name="com.example.recipehub.fragments.MyRecipesFragment"
@@ -18,9 +15,6 @@
             android:id="@+id/action_to_profile"
             app:destination="@id/profileFragment" />
     </fragment>
-
-
-    <!-- RecipeDetailsFragment - done-->
     <fragment
         android:id="@+id/recipeDetailsFragment"
         android:name="com.example.recipehub.fragments.RecipeDetailsFragment"
@@ -35,9 +29,6 @@
             android:id="@+id/action_to_profile"
             app:destination="@id/profileFragment" />
     </fragment>
-
-    <!--CreateFragment - done -->
-
     <fragment
         android:id="@+id/createFragment"
         android:name="com.example.recipehub.fragments.CreateFragment"
@@ -51,8 +42,6 @@
     <action
         android:id="@+id/action_to_myRecipes"
         app:destination="@id/myRecipesFragment" />
-
-    <!--EditFragment-->
     <fragment
         android:id="@+id/editFragment"
         android:name="com.example.recipehub.fragments.EditFragment"
@@ -67,8 +56,6 @@
             android:id="@+id/action_to_profile"
             app:destination="@id/profileFragment" />
     </fragment>
-
-    <!--BootFragment-->
     <fragment
         android:id="@+id/bootFragment"
         android:name="com.example.recipehub.fragments.BootFragment"
@@ -77,9 +64,6 @@
             android:id="@+id/action_to_home"
             app:destination="@id/homeFragment" />
     </fragment>
-
-    <!--ProfileFragment - done-->
-
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.recipehub.fragments.ProfileFragment"
@@ -91,7 +75,6 @@
             android:id="@+id/action_to_create"
             app:destination="@id/createFragment" />
     </fragment>
-    <!-- HomeFragment -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.recipehub.fragments.HomeFragment"
@@ -118,7 +101,6 @@
             android:id="@+id/action_to_myRecipes"
             app:destination="@id/myRecipesFragment" />
     </fragment>
-
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.recipehub.fragments.LoginFragment"
@@ -130,7 +112,6 @@
             android:id="@+id/action_to_home"
             app:destination="@id/homeFragment" />
     </fragment>
-
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.recipehub.fragments.RegisterFragment"
@@ -142,5 +123,4 @@
             android:id="@+id/action_to_home"
             app:destination="@id/homeFragment" />
     </fragment>
-
 </navigation>

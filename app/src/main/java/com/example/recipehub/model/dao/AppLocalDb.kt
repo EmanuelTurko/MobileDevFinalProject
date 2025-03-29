@@ -12,7 +12,7 @@ import com.example.recipehub.model.User
 import com.example.recipehub.utils.Converters
 
 
-@Database(entities = [User::class, Recipe::class,Comment::class,Rating::class], version = 12)
+@Database(entities = [User::class, Recipe::class,Comment::class,Rating::class], version = 17)
 @TypeConverters(Converters::class)
 abstract class AppLocalDbRepository: RoomDatabase() {
 

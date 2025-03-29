@@ -6,6 +6,7 @@ import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,9 @@ class RecipeAdapter(
     override fun getItemCount(): Int {
         return recipes.size
     }
+    fun getReversedRecipes(): List<Recipe> {
+        return recipes.reversed()
+    }
 
     inner class RecipeViewHolder(private val binding: ItemRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -47,7 +51,11 @@ class RecipeAdapter(
             }
             UserModel.shared.getUserByUsername(
                 recipe.author,
-                { user -> binding.authorAvatarImageView.setImageURI(user?.avatarUrl?.toUri()) },
+                    { user -> binding.apply(){
+                    authorAvatarImageView.setImageURI(user?.avatarUrl?.toUri())
+                    authorTextView.text = user?.username
+                    }
+                },
                 { exception -> exception.printStackTrace() })
 
             binding.titleTextView.text = recipe.title
@@ -68,18 +76,17 @@ class RecipeAdapter(
                 if(!fromUser) return@setOnRatingBarChangeListener
                 onRatingClickListener?.onRatingClick(recipe.id, rating)
             }
-
-            if (UserModel.shared.currentUser("username") == recipe.author) {
-                if(UserModel.shared.isLoggedIn()){
+            val user= UserModel.shared.currentUser("username")
+            val logged = UserModel.shared.isLoggedIn()
+            Log.d("Home", "$user and $logged")
+            if (UserModel.shared.currentUser("username") == recipe.author && UserModel.shared.isLoggedIn() && user!= null) {
                   binding.editPostBtn.visibility = View.VISIBLE
-                }
             } else {
                 binding.editPostBtn.visibility = View.GONE
             }
             binding.editPostBtn.setOnClickListener {
                 onEditClick(recipe)
             }
-
             RecipeModel.shared.getAllComments(recipe.id, { commentList ->
                 if (commentList.isNotEmpty()) {
                     val latestComment = commentList.last()
@@ -99,6 +106,7 @@ class RecipeAdapter(
                     )
                     binding.lastCommentTextView.text = formattedText
                 } else {
+                    binding.lastCommentTextView.gravity = Gravity.CENTER
                     binding.lastCommentTextView.text = "No comments yet"
                 }
             }, { exception ->

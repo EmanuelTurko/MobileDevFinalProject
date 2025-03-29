@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     tools:context=".fragments.EditFragment">
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/recipe_card"
         android:layout_width="match_parent"
@@ -20,13 +19,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp">
-
-            <!-- Title Input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/title_input_layout"
                 android:layout_width="0dp"
@@ -38,7 +34,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/upload_btn"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/title_editText"
                     android:layout_width="match_parent"
@@ -49,13 +44,6 @@
                     android:textColor="#FFFFFF"
                     android:textColorHint="#AAAAAA" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Upload Button -->
-
-            <!-- Image View (Hidden Until Image Is Added) -->
-
-            <!-- Description Input -->
-
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/upload_btn"
                 android:layout_width="50dp"
@@ -65,7 +53,6 @@
                 android:src="@drawable/ic_add_photo_white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title_input_layout" />
-
             <ImageView
                 android:id="@+id/imageUrl_imageView"
                 android:layout_width="match_parent"
@@ -80,9 +67,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_input_layout" />
-
-            <!-- Post Recipe Button -->
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/description_input_layout"
                 android:layout_width="0dp"
@@ -95,7 +79,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageUrl_imageView">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/description_editText"
                     android:layout_width="match_parent"
@@ -109,7 +92,6 @@
                     android:textColor="#FFFFFF"
                     android:textColorHint="#AAAAAA" />
             </com.google.android.material.textfield.TextInputLayout>
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/delete_btn"
                 android:layout_width="0dp"
@@ -122,7 +104,6 @@
                 app:layout_constraintStart_toEndOf="@+id/update_btn"
                 app:layout_constraintTop_toBottomOf="@+id/description_input_layout"
                 app:rippleColor="@color/rippleColor" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/update_btn"
                 android:layout_width="0dp"
@@ -135,10 +116,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description_input_layout"
                 app:rippleColor="@color/rippleColor" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </com.google.android.material.card.MaterialCardView>
-
 </androidx.core.widget.NestedScrollView>

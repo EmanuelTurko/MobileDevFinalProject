@@ -26,7 +26,7 @@ fun LoadingSpinner(
     isLoading: Boolean,
     progress: Float,
     onComplete: () -> Unit,
-    showCompletion: Boolean // Add showCompletion parameter
+    showCompletion: Boolean
 ) {
     var hideAfterDelay by remember { mutableStateOf(false) }
 
@@ -62,16 +62,15 @@ fun LoadingSpinner(
     }
 }
 @Composable
-fun SimulateLoading(onLoadingComplete: () -> Unit) {
+fun SimulateLoading(onLoadingComplete: () -> Unit, time: Long) {
     var showSpinner by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(true) }
     var progress by remember { mutableFloatStateOf(0f) }
     var showCompletion by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        // Simulate loading progress
         for (i in 1..100) {
-            delay(30)
+            delay(time)
             progress = i / 100f
         }
         isLoading = false

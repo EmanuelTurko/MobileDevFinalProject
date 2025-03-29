@@ -1,49 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:padding="16dp"
     android:layout_gravity="center"
+    android:layout_margin="8dp"
+    android:backgroundTint="@color/rippleColor"
     android:elevation="4dp"
-    android:backgroundTint="@android:color/white">
-
+    android:foregroundTint="#000000"
+    android:outlineAmbientShadowColor="#FFFFFF"
+    android:outlineSpotShadowColor="#FFFFFF"
+    android:padding="16dp"
+    android:paddingTop="8dp"
+    app:cardBackgroundColor="#FFFFFF">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/darker_gray" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:background="#333333"> <!-- Dark gray background for LinearLayout -->
-
-        <!-- Poster name -->
-        <TextView
-            android:id="@+id/comment_poster_TextView"
+        android:background="?attr/colorSurface"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:paddingBottom="4dp" />
-
-        <!-- Comment content -->
-        <TextView
-            android:id="@+id/comment_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:lineSpacingExtra="4dp"
-            android:paddingBottom="8dp" />
-
-        <!-- Date -->
-        <TextView
-            android:id="@+id/comment_date_TextView"
+            android:layout_marginEnd="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatarImageView"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:cropToPadding="true"
+                android:paddingHorizontal="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/blank_avatar"
+                app:contentPaddingTop="0dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Corner.FullCircle" />
+            <TextView
+                android:id="@+id/comment_poster_TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:paddingTop="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <View
+            android:id="@+id/verticalLine"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/darker_gray" />
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@android:color/white"/>
-
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/comment_date_TextView"
+                android:layout_width="40dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="3dp"
+                android:gravity="center|top"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="date"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/comment_textView"
+                app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/comment_textView"
+                android:layout_width="263dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="2dp"
+                android:gravity="top"
+                android:lineSpacingExtra="4dp"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="8dp"
+                android:text="comment"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                app:fontFamily="sans-serif-medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>

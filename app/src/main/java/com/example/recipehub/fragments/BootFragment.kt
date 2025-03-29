@@ -30,7 +30,7 @@ class BootFragment : Fragment() {
             setContent {
                 var isLoading by remember { mutableStateOf(true) }
                 SimulateLoading(
-                    onLoadingComplete = { isLoading = false },
+                    onLoadingComplete = { isLoading = false },25
                 )
                 LaunchedEffect(isLoading) {
                     if (!isLoading) {

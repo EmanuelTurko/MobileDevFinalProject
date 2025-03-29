@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <!-- Root Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/root_card"
         android:layout_width="match_parent"
@@ -18,12 +16,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <!-- Section 1: Avatar + Title + Edit Button -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/section1"
                 android:layout_width="0dp"
@@ -34,37 +29,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/colorSurface"
                     android:outlineAmbientShadowColor="#00FFFFFF"
                     android:outlineSpotShadowColor="#00FFFFFF">
-
-                    <!-- Avatar -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/author_avatar_imageView"
-                        android:layout_width="85dp"
-                        android:layout_height="85dp"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
                         android:contentDescription="@string/blank_avatar"
                         android:outlineSpotShadowColor="#9C27B0"
                         android:scaleType="centerCrop"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Corner.FullCircle" />
-
-                    <!-- Title -->
-
-                    <!-- Edit Button -->
-
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Corner.FullCircle"
+                        app:srcCompat="@drawable/blank_avatar" />
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title_textView"
-                        android:layout_width="265dp"
-                        android:layout_height="73dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="2dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="26dp"
                         android:background="@android:color/transparent"
                         android:gravity="center"
                         android:outlineProvider="bounds"
@@ -73,11 +59,24 @@
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:fontFamily="serif"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/author_avatar_imageView"
+                        app:layout_constraintTop_toBottomOf="@+id/author_textView"
+                        tools:layout_editor_absoluteX="120dp" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/author_textView"
+                        android:layout_width="213dp"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@android:color/transparent"
+                        android:outlineProvider="bounds"
+                        android:outlineSpotShadowColor="#9C27B0"
+                        android:text="Username"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:fontFamily="serif"
+                        app:layout_constraintEnd_toStartOf="@+id/edit_post_btn"
+                        app:layout_constraintHorizontal_bias="0.864"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/edit_post_btn"
                         android:layout_width="wrap_content"
@@ -93,7 +92,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/ic_edit_gray" />
-
                     <View
                         android:id="@+id/view3"
                         android:layout_width="match_parent"
@@ -104,12 +102,19 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/title_textView" />
-
+                    <View
+                        android:id="@+id/view4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@color/color_primary"
+                        app:layout_constraintBottom_toBottomOf="@+id/title_textView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/author_textView" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.cardview.widget.CardView>
-
-            <!-- Section 2: Recipe Image -->
             <ImageView
                 android:id="@+id/recipe_imageView"
                 android:layout_width="match_parent"
@@ -121,8 +126,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/section1" />
-
-            <!-- Section 3: Description, Rating, and Last Comment -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/section3"
                 android:layout_width="match_parent"
@@ -135,13 +138,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recipe_imageView">
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/colorSurface">
-
-                    <!-- Description -->
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/description_textView"
                         android:layout_width="match_parent"
@@ -156,8 +156,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <!-- Divider Line -->
                     <View
                         android:id="@+id/view2"
                         android:layout_width="match_parent"
@@ -167,8 +165,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/description_textView" />
-
-                    <!-- Rating -->
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
                         android:id="@+id/rating_ratingBar"
                         android:layout_width="match_parent"
@@ -188,8 +184,6 @@
                         app:mrb_progressTintMode="src_atop"
                         app:mrb_secondaryProgressTint="#345D5D5D"
                         app:mrb_secondaryProgressTintMode="multiply" />
-
-                    <!-- Divider Line -->
                     <View
                         android:id="@+id/view"
                         android:layout_width="match_parent"
@@ -199,8 +193,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rating_ratingBar" />
-
-                    <!-- Last Comment -->
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/last_comment_textView"
                         android:layout_width="match_parent"
@@ -215,12 +207,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rating_ratingBar" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
