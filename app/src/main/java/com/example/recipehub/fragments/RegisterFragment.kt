@@ -85,8 +85,7 @@ class RegisterFragment: BaseFragment(){
 
     @OptIn(UnstableApi::class)
     private fun onRegister() {
-        val username = binding?.usernameEditText?.text.toString()
-        binding?.usernameEditText?.requestFocus()
+        val username =binding?.usernameEditText?.text.toString()
         val email = binding?.emailEditText?.text.toString()
         val password = binding?.passwordEditText?.text.toString()
 
